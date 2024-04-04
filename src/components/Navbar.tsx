@@ -5,7 +5,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gray-800 py-4">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
         <div className="flex items-center">
           <span className="text-purple-500 text-lg font-bold">
             AI NFT Minter
