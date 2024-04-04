@@ -1,12 +1,53 @@
+import axios from "axios";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const Minter = () => {
   const [positivePrompt, setPositivePrompt] = useState("");
   const [negativePrompt, setNegativePrompt] = useState("");
+  const [AIImage, setAIImage] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = () => {
-    if (positivePrompt === "" || negativePrompt === "") {
-      throw new Error("States cannot be empty");
+  const url = import.meta.env.VITE_AI_IMAGE_GENERATOR_API_URL;
+  const rapidapi_key = import.meta.env.VITE_X_RapidAPI_Key;
+  const rapidapi_host = import.meta.env.VITE_X_RapidAPI_Host;
+
+  const generateAIImage = async () => {
+    const options = {
+      method: "POST",
+      url: url,
+      headers: {
+        "content-type": "application/json",
+        "X-RapidAPI-Key": rapidapi_key,
+        "X-RapidAPI-Host": rapidapi_host,
+      },
+      data: {
+        prompt: positivePrompt,
+        negativePrompt: negativePrompt,
+      },
+    };
+
+    try {
+      setLoading(true);
+      const response = await axios.request(options);
+      console.log(response.data);
+      setAIImage(response.data.ImageUrl);
+    } catch (error: any) {
+      toast.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onSubmit = async () => {
+    if (positivePrompt === "") {
+      toast.error("positive prompts cannot be empty");
+    }
+    // setLoading(true);
+    try {
+      await generateAIImage();
+    } catch (error) {
+      toast.error("something went wrong");
     }
   };
 
@@ -50,20 +91,25 @@ const Minter = () => {
           />
         </div>
         <button
+          disabled={loading}
           onClick={onSubmit}
-          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded relative"
         >
-          Generate
+          {loading && "Loading.."}
+          {!loading && "Generate"}
         </button>
       </div>
 
       {/* Right half */}
       <div className="w-full md:w-1/2 h-[400px] mt-10 md:mt-0">
-        <img
-          src="https://via.placeholder.com/500"
-          alt="Placeholder"
-          className="w-full h-auto"
-        />
+        {loading && <div className="loader mt-40 ml-20"></div>}
+        {!loading && (
+          <img
+            src={AIImage ? AIImage : "https://via.placeholder.com/500"}
+            alt="Placeholder"
+            className="w-full h-auto"
+          />
+        )}
       </div>
     </div>
   );
