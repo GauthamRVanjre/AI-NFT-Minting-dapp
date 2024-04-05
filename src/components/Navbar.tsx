@@ -1,7 +1,22 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { connectWallet, getAccount } from "../utils/wallet";
 
 const Navbar = () => {
   const [navExpand, setNavExpand] = useState(false);
+  const [account, setAccount] = useState("");
+
+  const onConnectWallet = async () => {
+    await connectWallet();
+    const activeAccount = await getAccount();
+    setAccount(activeAccount);
+  };
+
+  useEffect(() => {
+    async () => {
+      const activeAccount = await getAccount();
+      setAccount(activeAccount);
+    };
+  }, []);
 
   return (
     <nav className="bg-gray-800 py-4">
@@ -38,8 +53,11 @@ const Navbar = () => {
               </a>
             </li>
             <li>
-              <button className="text-white hover:text-purple-500">
-                Connect Wallet
+              <button
+                onClick={onConnectWallet}
+                className="text-white hover:text-purple-500"
+              >
+                {account ? account : "Connect Wallet"}
               </button>
             </li>
           </ul>
