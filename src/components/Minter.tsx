@@ -4,7 +4,6 @@ import toast from "react-hot-toast";
 
 const Minter = () => {
   const [positivePrompt, setPositivePrompt] = useState("");
-  const [negativePrompt, setNegativePrompt] = useState("");
   const [AIImage, setAIImage] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +22,8 @@ const Minter = () => {
       },
       data: {
         prompt: positivePrompt,
-        negativePrompt: negativePrompt,
+        // page: 1,
+        negativePrompt: "",
       },
     };
 
@@ -31,6 +31,7 @@ const Minter = () => {
       setLoading(true);
       const response = await axios.request(options);
       console.log(response.data);
+      // setAIImage(response.data?.results.images[0]);
       setAIImage(response.data.ImageUrl);
     } catch (error: any) {
       toast.error(error);
@@ -51,6 +52,10 @@ const Minter = () => {
     }
   };
 
+  // const onMintClick = async () => {
+
+  // }
+
   return (
     <div className="flex md:flex-row flex-col">
       {/* Left half */}
@@ -63,7 +68,7 @@ const Minter = () => {
             htmlFor="name"
             className="block text-sm font-medium text-gray-300"
           >
-            Positive Prompt
+            Prompt
           </label>
           <textarea
             id="name"
@@ -72,24 +77,10 @@ const Minter = () => {
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
               setPositivePrompt(e.target.value)
             }
+            disabled={loading}
           />
         </div>
-        <div className="mb-4">
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-300"
-          >
-            Negative Prompt
-          </label>
-          <textarea
-            id="email"
-            name="email"
-            className="mt-1 block w-full text-black p-2 border-gray-300 rounded-md shadow-sm outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setNegativePrompt(e.target.value)
-            }
-          />
-        </div>
+
         <button
           disabled={loading}
           onClick={onSubmit}
@@ -98,16 +89,33 @@ const Minter = () => {
           {loading && "Loading.."}
           {!loading && "Generate"}
         </button>
+
+        {!loading && AIImage && (
+          <button
+            disabled={loading}
+            onClick={onSubmit}
+            className="bg-indigo-500 hover:bg-indigo-700 ml-4 text-white font-bold py-2 px-4 rounded relative"
+          >
+            Mint
+          </button>
+        )}
       </div>
 
       {/* Right half */}
       <div className="w-full md:w-1/2 h-[400px] mt-10 md:mt-0">
-        {loading && <div className="loader mt-40 ml-20"></div>}
+        {loading && (
+          <div>
+            <div className="loader mt-40 ml-20"></div>
+            <p className="mt-2">
+              Hold tight, it takes about an minute for AI to cook
+            </p>
+          </div>
+        )}
         {!loading && (
           <img
             src={AIImage ? AIImage : "https://via.placeholder.com/500"}
             alt="Placeholder"
-            className="w-full h-auto"
+            className="w-[800px] h-[700px]"
           />
         )}
       </div>
