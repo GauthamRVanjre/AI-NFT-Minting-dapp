@@ -9,14 +9,12 @@ const Navbar = () => {
     await connectWallet();
     const activeAccount = await getAccount();
     setAccount(activeAccount);
-    localStorage.setItem("walletAddress", JSON.stringify(activeAccount));
   };
 
   useEffect(() => {
     async () => {
       const activeAccount = await getAccount();
       setAccount(activeAccount);
-      localStorage.setItem("walletAddress", JSON.stringify(activeAccount));
     };
   }, []);
 

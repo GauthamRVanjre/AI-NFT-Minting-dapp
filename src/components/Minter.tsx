@@ -1,6 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import fs from "fs";
+import { uploadImageUrlToIPFS } from "./Pinata";
+import { mintNFT } from "../utils/operations";
+import { getAccount } from "../utils/wallet";
 
 const Minter = () => {
   const [positivePrompt, setPositivePrompt] = useState("");
@@ -43,6 +47,7 @@ const Minter = () => {
   const onSubmit = async () => {
     if (positivePrompt === "") {
       toast.error("positive prompts cannot be empty");
+      return;
     }
     // setLoading(true);
     try {
@@ -52,9 +57,35 @@ const Minter = () => {
     }
   };
 
-  // const onMintClick = async () => {
+  const onMintClick = async () => {
+    const address = localStorage.getItem("walletAddress");
+    console.log("address", address);
 
-  // }
+    const activeAddress = await getAccount();
+
+    if (address !== undefined && address !== null) {
+      console.log("uploading image to IPFS...");
+      const IPFSUrl = await uploadImageUrlToIPFS(AIImage, positivePrompt);
+      console.log("imaged upload in frontend", IPFSUrl);
+
+      if (IPFSUrl !== null) {
+        try {
+          const mintingRes = await mintNFT(
+            positivePrompt,
+            IPFSUrl,
+            activeAddress
+          );
+          console.log("minting completed", mintingRes);
+        } catch (err) {
+          alert("Something went wrong");
+        }
+      }
+    }
+
+    // sending data along with IPFSlink to mint operation
+
+    // 1. logged in user address
+  };
 
   return (
     <div className="flex md:flex-row flex-col">
@@ -93,7 +124,7 @@ const Minter = () => {
         {!loading && AIImage && (
           <button
             disabled={loading}
-            onClick={onSubmit}
+            onClick={onMintClick}
             className="bg-indigo-500 hover:bg-indigo-700 ml-4 text-white font-bold py-2 px-4 rounded relative"
           >
             Mint

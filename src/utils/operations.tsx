@@ -1,6 +1,7 @@
 import { tezos } from "./tezos";
+import { char2Bytes } from "@taquito/utils";
 
-export const uploadImage = async (
+export const mintNFT = async (
   name: string,
   imageUrl: string,
   address: string
@@ -9,7 +10,11 @@ export const uploadImage = async (
     const contract = await tezos.wallet.at(
       "KT1TnTvAimFyhxvRv1dPjptuDrmdNMtVu9J9"
     );
-    const op = await contract.methods.mint(address, name, imageUrl).send();
+    const IPFSUrlOfImage = char2Bytes(imageUrl);
+
+    const op = await contract.methods
+      .mint(address, name, IPFSUrlOfImage)
+      .send();
     return op.confirmation();
   } catch (error) {
     console.error(error);
