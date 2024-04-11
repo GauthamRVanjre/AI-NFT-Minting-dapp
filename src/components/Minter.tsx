@@ -70,7 +70,11 @@ const Minter = () => {
   const onMintClick = async () => {
     const activeAddress = await getAccount();
 
-    if (activeAddress !== undefined && activeAddress !== null) {
+    if (
+      activeAddress &&
+      activeAddress !== undefined &&
+      activeAddress !== null
+    ) {
       // console.log("uploading image to IPFS...");
       try {
         setLoading(true);
@@ -92,11 +96,15 @@ const Minter = () => {
             }
           } catch (err) {
             // alert("Something went wrong");
-            toast.error("Something went wrong");
+            toast.error(
+              "Something went wrong, make sure you have connected your wallet"
+            );
           }
         }
       } catch (error) {
-        toast.error("Something went wrong");
+        toast.error(
+          "Something went wrong, make sure you have connected your wallet"
+        );
       } finally {
         setLoading(false);
         setPositivePrompt("");

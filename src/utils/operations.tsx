@@ -8,7 +8,7 @@ export const mintNFT = async (
 ) => {
   try {
     const contract = await tezos.wallet.at(
-      "KT1TnTvAimFyhxvRv1dPjptuDrmdNMtVu9J9"
+      import.meta.env.VITE_SMART_CONTRACT_URL
     );
     const IPFSUrlOfImage = char2Bytes(imageUrl);
 
