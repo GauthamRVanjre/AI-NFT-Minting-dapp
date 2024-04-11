@@ -2,10 +2,14 @@
 
 This project is a AI NFT minting platform where users can generate AI images based on positive and negative prompts and later mint them as NFTs. The platform is built using SmartPy for the smart contracts and React Vite App for the user interface.
 
-<!-- Here are the links to the contract and UI: -->
+Here are the links to the contract and UI:
 
-<!-- - Smart contract: [https://better-call.dev/ghostnet/KT1AQTuhEjSWY7UUs9SvzuZJHwEreVTdtMWz/operations](https://better-call.dev/ghostnet/KT1AQTuhEjSWY7UUs9SvzuZJHwEreVTdtMWz/operations)
-- User interface: [https://bejewelled-youtiao-7674cf.netlify.app/](https://bejewelled-youtiao-7674cf.netlify.app/) -->
+- Smart contract: [https://better-call.dev/ghostnet/KT1TnTvAimFyhxvRv1dPjptuDrmdNMtVu9J9/operations](https://better-call.dev/ghostnet/KT1TnTvAimFyhxvRv1dPjptuDrmdNMtVu9J9/operations)
+- User interface: [https://ai-nft-minting-dapp.vercel.app/](https://ai-nft-minting-dapp.vercel.app/)
+
+## Output Screen
+
+![Image Title](/public/cute_dog.PNG)
 
 ## How it works
 
