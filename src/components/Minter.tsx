@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import fs from "fs";
-import { uploadImageUrlToIPFS } from "./Pinata";
+import { uploadImageUrlToIPFS } from "../utils/Pinata";
 import { mintNFT } from "../utils/operations";
 import { getAccount } from "../utils/wallet";
 
@@ -57,34 +56,52 @@ const Minter = () => {
     }
   };
 
-  const onMintClick = async () => {
-    const address = localStorage.getItem("walletAddress");
-    console.log("address", address);
+  const uploadImageToIpfs = async () => {
+    try {
+      // uploading image to IPFS
+      const IPFSUrl = await uploadImageUrlToIPFS(AIImage, positivePrompt);
+      return IPFSUrl;
+      // console.log("imaged upload in frontend", IPFSUrl);
+    } catch (error) {
+      toast.error("something went wrong");
+    }
+  };
 
+  const onMintClick = async () => {
     const activeAddress = await getAccount();
 
-    if (address !== undefined && address !== null) {
-      console.log("uploading image to IPFS...");
-      const IPFSUrl = await uploadImageUrlToIPFS(AIImage, positivePrompt);
-      console.log("imaged upload in frontend", IPFSUrl);
+    if (activeAddress !== undefined && activeAddress !== null) {
+      // console.log("uploading image to IPFS...");
+      try {
+        setLoading(true);
+        const IPFSUrl = await uploadImageToIpfs();
 
-      if (IPFSUrl !== null) {
-        try {
-          const mintingRes = await mintNFT(
-            positivePrompt,
-            IPFSUrl,
-            activeAddress
-          );
-          console.log("minting completed", mintingRes);
-        } catch (err) {
-          alert("Something went wrong");
+        // using IPFS and metadata, call minting function
+        if (IPFSUrl !== null && IPFSUrl !== undefined) {
+          try {
+            const mintingRes = await mintNFT(
+              positivePrompt,
+              IPFSUrl,
+              activeAddress
+            );
+            console.log("minting completed", mintingRes);
+            if (mintingRes !== undefined) {
+              toast.success("NFT Minted Successfully");
+            } else {
+              toast.error("NFTminting Failed");
+            }
+          } catch (err) {
+            // alert("Something went wrong");
+            toast.error("Something went wrong");
+          }
         }
+      } catch (error) {
+        toast.error("Something went wrong");
+      } finally {
+        setLoading(false);
+        setPositivePrompt("");
       }
     }
-
-    // sending data along with IPFSlink to mint operation
-
-    // 1. logged in user address
   };
 
   return (
@@ -137,9 +154,6 @@ const Minter = () => {
         {loading && (
           <div>
             <div className="loader mt-40 ml-20"></div>
-            <p className="mt-2">
-              Hold tight, it takes about an minute for AI to cook
-            </p>
           </div>
         )}
         {!loading && (
