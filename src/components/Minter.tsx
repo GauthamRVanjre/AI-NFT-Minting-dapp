@@ -33,9 +33,9 @@ const Minter = () => {
     try {
       setLoading(true);
       const response = await axios.request(options);
-      console.log(response.data);
-      // setAIImage(response.data?.results.images[0]);
-      setAIImage(response.data.ImageUrl);
+      // console.log(response.data);
+      setAIImage(response.data?.results.images[0]);
+      // setAIImage(response.data.ImageUrl);
     } catch (error: any) {
       toast.error(error);
     } finally {
@@ -84,7 +84,7 @@ const Minter = () => {
               IPFSUrl,
               activeAddress
             );
-            console.log("minting completed", mintingRes);
+            // console.log("minting completed", mintingRes);
             if (mintingRes !== undefined) {
               toast.success("NFT Minted Successfully");
             } else {
