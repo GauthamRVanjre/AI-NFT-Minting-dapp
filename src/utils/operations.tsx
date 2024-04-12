@@ -13,7 +13,7 @@ export const mintNFT = async (
     const IPFSUrlOfImage = char2Bytes(imageUrl);
 
     const op = await contract.methods
-      .mint(address, name, IPFSUrlOfImage)
+      .mint(address, IPFSUrlOfImage, name)
       .send();
     return op.confirmation();
   } catch (error) {
