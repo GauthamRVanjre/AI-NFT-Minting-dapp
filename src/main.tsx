@@ -5,6 +5,7 @@ import "./index.css";
 import { Toaster } from "react-hot-toast";
 import NFTMinter from "./pages/NFTMinter.tsx";
 import App from "./App.tsx";
+import ImageGenerator from "./pages/ImageGenerator.tsx";
 
 const router = createBrowserRouter([
   {
@@ -12,8 +13,8 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
-    path: "/imageGenerator",
-    element: "Hello generator",
+    path: "/ImageGenerator",
+    element: <ImageGenerator />,
   },
   {
     path: "/NFTMinter",
