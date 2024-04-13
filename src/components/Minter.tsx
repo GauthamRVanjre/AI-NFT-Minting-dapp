@@ -1,14 +1,20 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { uploadImageUrlToIPFS } from "../utils/Pinata";
 import { mintNFT } from "../utils/operations";
 import { getAccount } from "../utils/wallet";
+import { useLocation } from "react-router-dom";
 
 const Minter = () => {
   const [positivePrompt, setPositivePrompt] = useState("");
   const [AIImage, setAIImage] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const currentURL = useLocation().pathname;
+
+  useEffect(() => {
+    console.log("current url: ", currentURL);
+  }, []);
 
   const url = import.meta.env.VITE_AI_IMAGE_GENERATOR_API_URL;
   const rapidapi_key = import.meta.env.VITE_X_RapidAPI_Key;
@@ -146,7 +152,7 @@ const Minter = () => {
           {!loading && "Generate"}
         </button>
 
-        {!loading && AIImage && (
+        {!loading && AIImage && currentURL !== "/imageGenerator" && (
           <button
             disabled={loading}
             onClick={onMintClick}
