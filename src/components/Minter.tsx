@@ -146,7 +146,7 @@ const Minter = () => {
         <button
           disabled={loading}
           onClick={onSubmit}
-          className="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded relative"
+          className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded relative"
         >
           {loading && "Loading.."}
           {!loading && "Generate"}
@@ -156,7 +156,7 @@ const Minter = () => {
           <button
             disabled={loading}
             onClick={onMintClick}
-            className="bg-indigo-500 hover:bg-indigo-700 ml-4 text-white font-bold py-2 px-4 rounded relative"
+            className="bg-purple-500 hover:bg-purple-700 ml-4 text-white font-bold py-2 px-4 rounded relative"
           >
             Mint
           </button>
