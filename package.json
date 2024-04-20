@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@axiomhq/winston": "^1.0.0-rc.3",
     "@taquito/beacon-wallet": "^19.1.0",
     "@taquito/taquito": "^19.1.0",
     "axios": "^1.6.8",
@@ -22,7 +23,8 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.22.3",
     "stream-browserify": "^3.0.0",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "winston": "^3.13.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

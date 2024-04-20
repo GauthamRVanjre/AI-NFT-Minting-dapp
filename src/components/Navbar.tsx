@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { connectWallet, getAccount } from "../utils/wallet";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [navExpand, setNavExpand] = useState(false);
@@ -22,9 +23,11 @@ const Navbar = () => {
     <nav className="bg-gray-800 py-4">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
         <div className="flex items-center">
-          <span className="text-purple-500 text-lg font-bold">
-            AI NFT Minter
-          </span>
+          <Link to={"/"}>
+            <span className="text-purple-500 text-lg font-bold">
+              AI NFT Minter
+            </span>
+          </Link>
         </div>
         <div className="sm:hidden">
           {/* Hamburger icon for mobile */}
@@ -47,11 +50,6 @@ const Navbar = () => {
         </div>
         <div className={`sm:flex ${navExpand ? "block" : "hidden"}`}>
           <ul className="flex space-x-4">
-            <li>
-              <a href="#" className="text-white hover:text-purple-500">
-                Home
-              </a>
-            </li>
             <li>
               <button
                 onClick={onConnectWallet}

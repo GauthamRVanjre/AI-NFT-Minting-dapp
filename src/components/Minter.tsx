@@ -66,8 +66,8 @@ const Minter = () => {
     try {
       // uploading image to IPFS
       const IPFSUrl = await uploadImageUrlToIPFS(AIImage, positivePrompt);
+      toast.success("Image uploaded successfully to IPFS");
       return IPFSUrl;
-      // console.log("imaged upload in frontend", IPFSUrl);
     } catch (error) {
       toast.error("something went wrong");
     }
