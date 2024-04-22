@@ -155,6 +155,10 @@ const Minter = () => {
         {loading && (
           <div>
             <div className="loader mt-40 ml-20"></div>
+            {!AIImage && (
+              <div className="text-base ml-24 mt-4">AI is cooking</div>
+            )}
+            {AIImage && <div className="text-base ml-24 mt-4">Minting NFT</div>}
           </div>
         )}
         {!loading && (
