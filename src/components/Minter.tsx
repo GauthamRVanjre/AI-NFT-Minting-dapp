@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { uploadImageUrlToIPFS } from "../utils/Pinata";
@@ -7,7 +6,7 @@ import { getAccount } from "../utils/wallet";
 import { useLocation } from "react-router-dom";
 
 const Minter = () => {
-  const [positivePrompt, setPositivePrompt] = useState("");
+  const [prompt, setPrompt] = useState("");
   const [AIImage, setAIImage] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const currentURL = useLocation().pathname;
@@ -16,32 +15,26 @@ const Minter = () => {
     console.log("current url: ", currentURL);
   }, []);
 
-  const url = import.meta.env.VITE_AI_IMAGE_GENERATOR_API_URL;
-  const rapidapi_key = import.meta.env.VITE_X_RapidAPI_Key;
-  const rapidapi_host = import.meta.env.VITE_X_RapidAPI_Host;
-
-  const generateAIImage = async () => {
-    const options = {
-      method: "POST",
-      url: url,
-      headers: {
-        "content-type": "application/json",
-        "X-RapidAPI-Key": rapidapi_key,
-        "X-RapidAPI-Host": rapidapi_host,
-      },
-      data: {
-        prompt: positivePrompt,
-        // page: 1,
-        negativePrompt: "",
-      },
-    };
+  const generateNewAIImage = async (data: { inputs: string }) => {
+    setLoading(true);
 
     try {
-      setLoading(true);
-      const response = await axios.request(options);
-      // console.log(response.data);
-      setAIImage(response.data?.results.images[0]);
-      // setAIImage(response.data.ImageUrl);
+      const response = await fetch(
+        `${import.meta.env.VITE_AI_IMAGE_GENERATOR_API_URL}`,
+        {
+          headers: {
+            Authorization: `Bearer ${
+              import.meta.env.VITE_HUGGING_FACE_API_Key
+            }`,
+          },
+          method: "POST",
+          body: JSON.stringify(data),
+        }
+      );
+      const result = await response.blob();
+      const imageCreation = URL.createObjectURL(result);
+      console.log(imageCreation);
+      setAIImage(imageCreation);
     } catch (error: any) {
       toast.error(error);
     } finally {
@@ -50,13 +43,13 @@ const Minter = () => {
   };
 
   const onSubmit = async () => {
-    if (positivePrompt === "") {
-      toast.error("positive prompts cannot be empty");
+    if (prompt === "") {
+      toast.error("prompt cannot be empty");
       return;
     }
     // setLoading(true);
     try {
-      await generateAIImage();
+      await generateNewAIImage({ inputs: prompt });
     } catch (error) {
       toast.error("something went wrong");
     }
@@ -65,7 +58,7 @@ const Minter = () => {
   const uploadImageToIpfs = async () => {
     try {
       // uploading image to IPFS
-      const IPFSUrl = await uploadImageUrlToIPFS(AIImage, positivePrompt);
+      const IPFSUrl = await uploadImageUrlToIPFS(AIImage, prompt);
       toast.success("Image uploaded successfully to IPFS");
       return IPFSUrl;
     } catch (error) {
@@ -89,19 +82,13 @@ const Minter = () => {
         // using IPFS and metadata, call minting function
         if (IPFSUrl !== null && IPFSUrl !== undefined) {
           try {
-            const mintingRes = await mintNFT(
-              positivePrompt,
-              IPFSUrl,
-              activeAddress
-            );
-            // console.log("minting completed", mintingRes);
+            const mintingRes = await mintNFT(prompt, IPFSUrl, activeAddress);
             if (mintingRes !== undefined) {
               toast.success("NFT Minted Successfully");
             } else {
               toast.error("NFTminting Failed");
             }
           } catch (err) {
-            // alert("Something went wrong");
             toast.error(
               "Something went wrong, make sure you have connected your wallet"
             );
@@ -113,7 +100,7 @@ const Minter = () => {
         );
       } finally {
         setLoading(false);
-        setPositivePrompt("");
+        setPrompt("");
       }
     }
   };
@@ -137,7 +124,7 @@ const Minter = () => {
             name="name"
             className="mt-1 block w-full h-32 text-black p-2 border-gray-300 rounded-md shadow-sm outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-              setPositivePrompt(e.target.value)
+              setPrompt(e.target.value)
             }
             disabled={loading}
           />
@@ -152,7 +139,7 @@ const Minter = () => {
           {!loading && "Generate"}
         </button>
 
-        {!loading && AIImage && currentURL !== "/imageGenerator" && (
+        {!loading && AIImage && currentURL !== "/ImageGenerator" && (
           <button
             disabled={loading}
             onClick={onMintClick}
